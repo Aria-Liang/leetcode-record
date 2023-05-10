@@ -1,16 +1,16 @@
-# Day1 Array
+# Day1 Array01
 
 ##  Storage in Memory
 Array elements are always stored in consecutive memory locations, but for 2-d array it is not consecutive
 
 ##  Basic Knowledge about array
-#### > Instantiating an Array in java: 
+- Instantiating an Array in java: 
 `int[] intArray = new int[20];` (declaring array and allocate memory to array)
 `int[][] arr = new int[3][3];`
 
-#### > Array Literals:
+- Array Literals:
 `int[] intArray = new int[] {1,2,3,4,5};`
-#### > For loop:
+- For loop:
 ```
 for (int i = 0; i < mylist.length; i++){
     total += mylist[i];
@@ -20,7 +20,7 @@ for (double element: mylist){
     System.out.println(element);
 }
 ```
-#### > Change Array to ArrayList:
+- Change Array to ArrayList:
 ```
 List arrList = new ArrayList(Arrays.asList(intArray));
 arrList.add(x);
@@ -75,3 +75,36 @@ class Solution {
 ```
 
 3. Two pointer - 双向指针：
+```
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        if (nums.length == 0 || nums == null){
+            return 0;
+        }
+
+        int left = 0;
+        int right = nums.length - 1;
+
+        while (left < right){
+            while (nums[left] != val && left < nums.length - 1){
+                left ++;
+            }
+            while (nums[right] == val && right > 0){
+                right --;
+            }
+
+            if (nums[left] == val && nums[right] != val && left < right){
+                nums[left] = nums[right];
+                nums[right] = val;
+                left += 1;
+                right -= 1;
+            }
+        }
+
+        if (nums[left] != val){
+            return left + 1;
+        }
+        return left;
+    }
+}
+```
