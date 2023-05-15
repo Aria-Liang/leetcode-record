@@ -75,7 +75,7 @@ class Solution {
                      2. 可以直接把result传进twosum里面，直接加进去
                      
                      
-###[18. 4Sum](https://leetcode.com/problems/4sum/description/)
+### [18. 4Sum](https://leetcode.com/problems/4sum/description/)
 和3sum一样，只是这次是固定a,b两个点，twosum c,d两个点
 ```
 class Solution {
@@ -136,7 +136,7 @@ class Solution {
 }
 ```
 
-###[454. 4Sum II](https://leetcode.com/problems/4sum-ii/description/)
+### [454. 4Sum II](https://leetcode.com/problems/4sum-ii/description/)
 ```
 class Solution {
     public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
