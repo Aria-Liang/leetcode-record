@@ -263,3 +263,57 @@ class Solution {
     }
 }
 ```
+写的略微复杂，也可以直接整体法递归，因为BFS有个重要特性，如果in order  traversal会是从小到大的。
+```
+//方法1：
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode pre = null;
+        if(root != null)
+            stack.add(root);        
+        while(!stack.isEmpty()){
+            TreeNode curr = stack.peek();
+            if(curr != null){
+                stack.pop();
+                if(curr.right != null)
+                    stack.add(curr.right);
+                stack.add(curr);
+                stack.add(null);
+                if(curr.left != null)
+                    stack.add(curr.left);     //第一步相当于是把数字都展开，以in order的顺序展开
+            }else{
+                stack.pop();
+                TreeNode temp = stack.pop();
+                if(pre != null && pre.val >= temp.val)     //处理展开之后的以in order顺序排列的数字，prev应该小于curr
+                    return false;
+                pre = temp;
+            }
+        }
+        return true;
+    }
+}
+
+// 递归
+class Solution {
+    TreeNode max;
+    public boolean isValidBST(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        // 左
+        boolean left = isValidBST(root.left);
+        if (!left) {
+            return false;
+        }
+        // 中
+        if (max != null && root.val <= max.val) {                 //这里不需要比较root.val小于right tree最小值的原因是，in order traversal会自动像爬坡一样从最小值爬到最大值
+            return false;                                         //然后我们只用更新每次的max value就可以
+        }
+        max = root;
+        // 右
+        boolean right = isValidBST(root.right);
+        return right;
+    }
+}
+```
