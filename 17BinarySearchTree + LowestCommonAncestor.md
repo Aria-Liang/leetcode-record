@@ -80,6 +80,38 @@ class Solution {
     }
 }
 ```
+也可以用统一的迭代法写：
+```
+class Solution {
+    public int getMinimumDifference(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode pre = null;
+        int result = Integer.MAX_VALUE;
+
+        if (root != null){
+            stack.push(root);
+        }
+
+        while (!stack.isEmpty()){
+            TreeNode curr = stack.pop();
+            if (curr != null){
+                if (curr.right != null) stack.push(curr.right);
+                stack.push(curr);
+                stack.push(null);
+                if (curr.left != null) stack.push(curr.left);
+            }
+            else{
+                TreeNode temp = stack.pop();
+                if (pre != null){
+                    result = Math.min(result, temp.val - pre.val);
+                }
+                pre = temp;
+            }
+        }
+        return result;
+    }
+}
+```
 
 ### [501. Find Mode in Binary Search Tree](https://leetcode.com/problems/find-mode-in-binary-search-tree/description/)
 ```
@@ -122,6 +154,58 @@ class Solution {
     }
 }
 ```
+这是暴力解法，如果不想要额外占用空间，并且只想遍历一遍呢：
+```
+class Solution {
+    ArrayList<Integer> resList;
+    int maxcount;
+    int count;
+    TreeNode pre;
+
+    public int[] findMode(TreeNode root) {
+        resList = new ArrayList<>();
+        maxcount = 0;
+        count = 0;
+        pre = null;
+        helper(root);
+        int[] res = new int[resList.size()];
+        for (int i = 0; i < resList.size(); i++){
+            res[i] = resList.get(i);
+        }
+        return res;
+    }
+
+    private void helper(TreeNode root){
+        if (root == null){
+            return;
+        }
+
+        helper(root.left);
+        int rootvalue = root.val;
+
+        if (pre == null || rootvalue != pre.val){
+            count = 1;
+        }
+        else{
+            count += 1;
+        }
+
+        if (count > maxcount){
+            resList.clear();
+            resList.add(rootvalue);
+            maxcount = count;
+        }
+        else if (count == maxcount){
+            resList.add(rootvalue);
+        }
+
+        pre = root;
+
+        helper(root.right);
+    }
+}
+```
+通过找到之后clear list
 
 ### [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/)
 ```
@@ -147,3 +231,4 @@ class Solution {
 
 }
 ```
+后续遍历就是天然的从下往上
