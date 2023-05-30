@@ -45,6 +45,7 @@ class Solution {
     }
 }
 ```
+和construct一个思路
 
 ### [617. Merge Two Binary Trees](https://leetcode.com/problems/merge-two-binary-trees/description/)
 ```
@@ -77,8 +78,64 @@ class Solution {
     }
 }
 ```
+写的过于复杂
+```
+class Solution {
+    // 递归
+    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null) return root2;
+        if (root2 == null) return root1;
+
+        root1.val += root2.val;
+        root1.left = mergeTrees(root1.left,root2.left);
+        root1.right = mergeTrees(root1.right,root2.right);
+        return root1;
+    }
+}
+```
+
+```
+class Solution {
+    // 使用栈迭代
+    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null) {
+            return root2;
+        }
+        if (root2 == null) {
+            return root1;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root2);
+        stack.push(root1);
+        while (!stack.isEmpty()) {
+            TreeNode node1 = stack.pop();
+            TreeNode node2 = stack.pop();
+            node1.val += node2.val;
+            if (node2.right != null && node1.right != null) {
+                stack.push(node2.right);
+                stack.push(node1.right);
+            } else {
+                if (node1.right == null) {
+                    node1.right = node2.right;
+                }
+            }
+            if (node2.left != null && node1.left != null) {
+                stack.push(node2.left);
+                stack.push(node1.left);
+            } else {
+                if (node1.left == null) {
+                    node1.left = node2.left;
+                }
+            }
+        }
+        return root1;
+    }
+}
+```
+也可以用stack, 因为如果走到某一个tree的left node或者right node为null, 就没什么必要走了， 所以后续也不用加入stack
 
 ### [700. Search in a Binary Search Tree](https://leetcode.com/problems/search-in-a-binary-search-tree/description/)
+利用binary search的递归方法：
 ```
 class Solution {
     public TreeNode searchBST(TreeNode root, int val) {
@@ -95,6 +152,61 @@ class Solution {
         else{
             return searchBST(root.right, val);
         }
+    }
+}
+```
+不利用binary search的递归方法：
+```
+class Solution {
+    // 递归，普通二叉树
+    public TreeNode searchBST(TreeNode root, int val) {
+        if (root == null || root.val == val) {
+            return root;
+        }
+
+        TreeNode left = searchBST(root.left, val);
+        if (left != null) return left;    //如果左边找不到，有可能没有，有可能在右边
+
+        TreeNode right = searchBST(root.right, val);
+        
+        return right;
+    }
+}
+
+```
+```
+class Solution {
+    // 迭代，普通二叉树
+    public TreeNode searchBST(TreeNode root, int val) {
+        if (root == null || root.val == val) {
+            return root;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode pop = stack.pop();
+            if (pop.val == val) {
+                return pop;
+            }
+            if (pop.right != null) {
+                stack.push(pop.right);
+            }
+            if (pop.left != null) {
+                stack.push(pop.left);
+            }
+        }
+        return null;
+    }
+}
+
+class Solution {
+    // 迭代，利用二叉搜索树特点，优化，可以不需要栈
+    public TreeNode searchBST(TreeNode root, int val) {
+        while (root != null)
+            if (val < root.val) root = root.left;
+            else if (val > root.val) root = root.right;
+            else return root;
+        return null;
     }
 }
 ```
