@@ -125,3 +125,36 @@ class Solution {
 }
 ```
 感觉思路基本正确，但是不知道哪里出了问题，代码跑不通，这里其实不需要创建map,一个String[]就可以
+```
+class Solution {
+    List<String> result = new ArrayList<>();
+    StringBuilder sb = new StringBuilder();
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() == 0){
+            return result;
+        }
+
+        String[] numString = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+        traceback(0, numString, digits);
+        return result;
+
+    }
+
+    private void traceback(int level, String[] numString, String digits){
+        if (sb.length() == digits.length()){
+            result.add(sb.toString());
+            return;
+        }
+
+        String value = numString[digits.charAt(level) - '0'];
+
+        for (int i = 0; i < value.length(); i++){
+            sb.append(value.charAt(i));
+            traceback(level + 1, numString, digits);
+            int lastIndex = sb.length() - 1;
+            sb.deleteCharAt(lastIndex);
+        }
+    }
+}
+```
