@@ -135,3 +135,78 @@ class Solution {
 }
 ```
 数峰值就可以
+
+### [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)
+```
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if (nums.length == 0){
+            return 0;
+        }
+        
+        int minsum = 0;
+        int totalsum = 0;
+        int max = 0;
+
+        for (int i = 0; i < nums.length; i++){
+            totalsum += nums[i];
+
+            if (i == 0){
+                max = totalsum;
+            }
+            else{
+                max = Math.max(max, totalsum - minsum);
+            }
+            minsum = Math.min(minsum, totalsum);
+        }
+
+        return max;
+    }
+}
+```
+优化版
+
+```
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if (nums.length == 0){
+            return 0;
+        }
+        
+        int minsum = 0;
+        int totalsum = 0;
+        int max = Integer.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++){
+            totalsum += nums[i];
+
+            
+            max = Math.max(max, totalsum - minsum);
+            
+            minsum = Math.min(minsum, totalsum);
+        }
+
+        return max;
+    }
+}
+```
+运用贪心算法的思路：当前面的totalsum为正的时候，始终是加上前面的数字会是sum更大的subarray,但是当前面的totalsum为负的时候，不加会是更好的
+```
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int totalsum = 0;
+        int maxsum = Integer.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++){
+            totalsum += nums[i];
+            maxsum = Math.max(maxsum, totalsum);
+
+            if (totalsum < 0){
+                totalsum = 0;
+            }
+        }
+
+        return maxsum;
+    }
+}
+```
